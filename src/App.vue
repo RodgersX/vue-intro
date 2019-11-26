@@ -1,19 +1,55 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Header />
+    <AddTodo @add-todo="addTodo"/>
+    <todos :todos="todos" @del-todo="deleteTodo"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import todos from './components/todos'
+import Header from './components/layout/header'
+import AddTodo from './components/addTodo'
+import axios from 'axios'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
-  }
+    todos,
+    Header,
+    AddTodo
+  },
+
+  data() {
+    return {
+      todos: []
+    }
+  },
+
+  created() {
+    axios.get('https://jsonplaceholder.typicode.com/todos')
+      .then(res => this.todos = res.data)
+      //.catch(err)
+  },
+
+  methods: {
+    deleteTodo(id) {
+      this.todos = this.todos.filter(todo => todo.id !== id)
+    },
+    addTodo(newTodo) {
+      const { title, completed } = newTodo
+      axios.post('https://jsonplaceholder.typicode.com/todos', {
+        title, completed
+      })
+      .then(res => {
+        this.todos = [...this.todos, res.data]
+      })
+      //this.todos = [...this.todos, newTodo]
+    }
+},
 }
+
+
 </script>
 
 <style>
@@ -24,5 +60,18 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.btn {
+  display: inline-block;
+  border: none;
+  background: #555;
+  color: #fff;
+  padding: 7px 20px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #666;
 }
 </style>
