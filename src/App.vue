@@ -1,55 +1,20 @@
 <template>
   <div id="app">
+    
     <Header />
-    <AddTodo @add-todo="addTodo"/>
-    <todos :todos="todos" @del-todo="deleteTodo"/>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import todos from './components/todos'
 import Header from './components/layout/header'
-import AddTodo from './components/addTodo'
-import axios from 'axios'
 
 export default {
   name: 'app',
   components: {
-    todos,
-    Header,
-    AddTodo
-  },
-
-  data() {
-    return {
-      todos: []
-    }
-  },
-
-  created() {
-    axios.get('https://jsonplaceholder.typicode.com/todos')
-      .then(res => this.todos = res.data)
-      //.catch(err)
-  },
-
-  methods: {
-    deleteTodo(id) {
-      this.todos = this.todos.filter(todo => todo.id !== id)
-    },
-    addTodo(newTodo) {
-      const { title, completed } = newTodo
-      axios.post('https://jsonplaceholder.typicode.com/todos', {
-        title, completed
-      })
-      .then(res => {
-        this.todos = [...this.todos, res.data]
-      })
-      //this.todos = [...this.todos, newTodo]
-    }
-},
+    Header
+  }
 }
-
-
 </script>
 
 <style>
@@ -59,19 +24,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
-.btn {
-  display: inline-block;
-  border: none;
-  background: #555;
-  color: #fff;
-  padding: 7px 20px;
-  cursor: pointer;
+#nav {
+  padding: 30px;
 }
 
-.btn:hover {
-  background: #666;
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
 }
 </style>
